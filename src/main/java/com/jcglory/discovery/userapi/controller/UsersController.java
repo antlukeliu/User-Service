@@ -3,6 +3,7 @@ package com.jcglory.discovery.userapi.controller;
 import com.jcglory.discovery.userapi.dto.UserDto;
 import com.jcglory.discovery.userapi.model.CreateUserRequest;
 import com.jcglory.discovery.userapi.model.CreateUserResponse;
+import com.jcglory.discovery.userapi.model.UserResponseModel;
 import com.jcglory.discovery.userapi.service.UsersService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
@@ -40,5 +41,14 @@ public class UsersController {
         CreateUserResponse response = modelMapper.map(createdDto, CreateUserResponse.class);
 
         return new ResponseEntity(response,HttpStatus.CREATED);
+    }
+
+    @GetMapping(value="/{userId}", produces = { MediaType.APPLICATION_JSON_VALUE })
+    public ResponseEntity<UserResponseModel> getUser(@PathVariable("userId") String userId) {
+
+        UserDto userDto = usersService.getUserByUserId(userId);
+        UserResponseModel returnValue = new ModelMapper().map(userDto, UserResponseModel.class);
+
+        return ResponseEntity.status(HttpStatus.OK).body(returnValue);
     }
 }
